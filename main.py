@@ -5,9 +5,7 @@ import json
 
 # flask --app main --debug run
 
-# replace with your own openai key
-with open('../openai.key') as f:
-    openai.api_key = f.read().strip()
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 app = Flask(__name__)
 
@@ -17,7 +15,7 @@ BASE_PROMPT = """Create a response document with content that matches the follow
 
 The first line is the Content-Type of the response.
 The following lines is the returned data.
-In case of a html response, add relative href links with to related topics.
+In case of a html response, add relative href links with to related topics. Also add some css styles to make it look nice.
 {{OPTIONAL_DATA}}
 
 Content-Type:
@@ -34,18 +32,17 @@ def catch_all(path=""):
         prompt = BASE_PROMPT.replace("{{OPTIONAL_DATA}}", f"")
 
     prompt = prompt.replace("{{URL_PATH}}", path)
-    
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
+
+    print(prompt)
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=512,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-        )
-    
-    ai_data = response.choices[0].text
+        max_tokens=2048,
+    )
+
+    ai_data = response.choices[0].message.content
 
     print(ai_data)
 
