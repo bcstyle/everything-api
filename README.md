@@ -7,4 +7,4 @@ Forked version of LiveOverflow/everything-api
 - Add HTML/CSS styles
 - (TODO): add real links to websites
 - (TODO): integret with LangChain
-
+- (TODO): integret with Dall-E to create images on the fly.
